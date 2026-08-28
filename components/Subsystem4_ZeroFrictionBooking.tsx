@@ -54,15 +54,15 @@ export const Subsystem4_ZeroFrictionBooking: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 4
+                <span className="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-extrabold uppercase">
+                  Transparent Fare Gateway
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Zero-Friction & Anti-Dark-Pattern Booking UI
+                  Instant Express Checkout & Unbundled Pricing
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                No 5-min timeout drops, invisible background bot-proof challenge (No CAPTCHA), transparent unbundled pricing
+                Zero dark-patterns, unbundled optional add-ons, transparent GST, and sub-second UPI 1-click checkout
               </p>
             </div>
           </div>

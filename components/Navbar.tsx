@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Key, Wifi, Clock, Train, Volume2, Globe, Fingerprint, UserCheck, LogIn } from 'lucide-react';
+import { ShieldCheck, Wifi, Clock, Train, Globe, Fingerprint, UserCheck, LogIn, Sparkles, Key } from 'lucide-react';
 import { INDIC_LANGUAGES, soundEffects } from '@/lib/audio';
 import { IndicLanguage } from '@/lib/types';
 import { aiEngine } from '@/lib/aiEngine';
@@ -22,7 +22,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   currentLang,
   onLanguageChange,
-  activeTab: _activeTab,
+  activeTab,
   onSelectTab,
   isLowBandwidth,
   onToggleLowBandwidth,
@@ -45,18 +45,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0F2C59] text-white shadow-xl border-b border-slate-700/50">
-      {/* Top micro-bar for Hackathon badge & system status */}
-      <div className="bg-[#081730] px-4 py-1.5 text-xs flex flex-wrap items-center justify-between border-b border-white/5">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 text-orange-400 font-semibold border border-orange-500/30">
-            <Sparkles className="w-3 h-3 text-orange-400 animate-spin" style={{ animationDuration: '6s' }} />
-            Hackathon Build: Build What Moves India (Public Digital Infrastructure)
-          </span>
-          <span className="hidden md:inline-block text-slate-400">|</span>
-          <span className="hidden md:inline-flex items-center gap-1 text-emerald-400 font-mono">
+    <header className="sticky top-0 z-50 w-full bg-[#0B2545] text-white shadow-xl border-b border-slate-700/50">
+      {/* Top Official Railway Service Status Bar */}
+      <div className="bg-[#06182E] px-4 py-1.5 text-xs flex flex-wrap items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-2 text-slate-300">
+          <div className="flex items-center gap-1.5 text-orange-400 font-semibold text-[11px]">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Synthetic PRS Engine: ONLINE
+            <span>Indian Railways National PRS Gateway: OPERATIONAL</span>
+          </div>
+          <span className="hidden md:inline-block text-slate-600">|</span>
+          <span className="hidden md:inline-flex items-center gap-1 text-slate-300 text-[11px]">
+            CRiS Certified • IRCTC Connected
           </span>
         </div>
 
@@ -68,43 +67,87 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={onToggleLowBandwidth}
-            title="Toggle Low Bandwidth Mode for Tier-2/3 Network Resilience"
-            className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] transition-colors ${
+            title="Toggle Network Optimization for Low Bandwidth"
+            className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] transition-colors cursor-pointer ${
               isLowBandwidth ? 'bg-amber-600 text-white font-medium' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
             <Wifi className="w-3 h-3" />
-            <span>{isLowBandwidth ? '2G Lite' : 'High Speed'}</span>
+            <span>{isLowBandwidth ? 'Lite 2G Mode' : 'High Speed'}</span>
           </button>
         </div>
       </div>
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand / Logo */}
+        {/* Brand / Official Railway Identity */}
         <div 
           onClick={() => onSelectTab('overview')}
-          className="flex items-center gap-2.5 cursor-pointer group"
+          className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 p-0.5 flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-[#0F2C59] rounded-[10px] flex items-center justify-center">
-              <Train className="w-5 h-5 sm:w-6 sm:h-6 text-orange-400" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 p-0.5 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
+            <div className="w-full h-full bg-[#0B2545] rounded-[10px] flex items-center justify-center">
+              <Train className="w-5 h-5 text-orange-400" />
             </div>
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-orange-300 bg-clip-text text-transparent">
-                RailFlow AI
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg sm:text-xl font-black tracking-tight text-white">
+                RailFlow
               </h1>
-              <span className="px-1 py-0.2 rounded bg-orange-500 text-white text-[9px] font-black tracking-wider uppercase">
+              <span className="px-1.5 py-0.2 rounded bg-orange-500 text-white text-[9px] font-black tracking-wider uppercase">
                 IRCTC 2.0
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 hidden sm:block">
-              Next-Gen Autonomous Railway Passenger OS
+            <p className="text-[10px] text-slate-300 font-medium hidden sm:block">
+              Next-Gen Indian Railways Passenger Portal
             </p>
           </div>
         </div>
+
+        {/* Primary Navigation Links (Desktop) */}
+        <nav className="hidden lg:flex items-center gap-1 text-xs font-bold text-slate-200">
+          <button
+            onClick={() => onSelectTab('overview')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'overview' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            Book Trains
+          </button>
+          <button
+            onClick={() => onSelectTab('pnr_tracker')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'pnr_tracker' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            PNR Status
+          </button>
+          <button
+            onClick={() => onSelectTab('live_radar')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'live_radar' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            Live Train GPS
+          </button>
+          <button
+            onClick={() => onSelectTab('subsystem10')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'subsystem10' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            RailMadad
+          </button>
+          <button
+            onClick={() => onSelectTab('subsystem1')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'subsystem1' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            TDR & Refunds
+          </button>
+        </nav>
 
         {/* Right side controls */}
         <div className="flex items-center gap-2 sm:gap-3">
@@ -128,10 +171,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             </select>
           </div>
 
-          {/* Biometric / Fast Login Button */}
+          {/* User Account / Profile */}
           <button
             onClick={onOpenAuthModal}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer ${
               currentUser
                 ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/40'
                 : 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white'
@@ -141,28 +184,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <>
                 <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="hidden sm:inline">{currentUser.name.split(' ')[0]}</span>
-                <span className="sm:hidden">Profile</span>
+                <span className="sm:hidden">Account</span>
               </>
             ) : (
               <>
                 <Fingerprint className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Fast Biometric Login</span>
+                <span className="hidden sm:inline">IRCTC Sign In</span>
                 <span className="sm:hidden">Login</span>
               </>
             )}
-          </button>
-
-          {/* OpenAI Key modal trigger */}
-          <button
-            onClick={onOpenApiKeyModal}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm hidden sm:flex ${
-              hasApiKey
-                ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/40'
-                : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:text-white'
-            }`}
-          >
-            <Key className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden md:inline">{hasApiKey ? 'GPT-4o Ready' : 'AI Key'}</span>
           </button>
         </div>
       </div>

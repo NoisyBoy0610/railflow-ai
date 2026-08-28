@@ -83,15 +83,15 @@ export const Subsystem10_RailMadadVision: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 10
+                <span className="px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold uppercase">
+                  RailMadad Portal
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Multimodal RailMadad Grievance Engine (Vision AI)
+                  Integrated Passenger Grievance Redressal (Vision AI)
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Vision AI severity grading (Critical/High/Normal), automatic coach tagging, and DRM division escalation
+                Automated photo inspection, severity triage (Critical / High / Normal), and On-Board Housekeeping (OBHS) SLA dispatch
               </p>
             </div>
           </div>

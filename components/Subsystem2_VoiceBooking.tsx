@@ -159,14 +159,14 @@ export const Subsystem2_VoiceBooking: React.FC<VoiceBookingProps> = ({ currentLa
             <div>
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 2
+                  AskDISHA 2.0 AI
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Indic Multimodal Voice-First Booking
+                  Conversational & Multilingual Voice Booking
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Speak naturally in 10 Indian regional languages — OpenAI structured PRS parameter deduction
+                Speak naturally in 10 Indian regional languages with instant speech-to-intent PRS parsing
               </p>
             </div>
           </div>

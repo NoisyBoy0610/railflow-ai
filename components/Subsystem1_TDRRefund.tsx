@@ -51,15 +51,15 @@ export const Subsystem1_TDRRefund: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 1
+                <span className="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-extrabold uppercase">
+                  Official Gazette Policy
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  AI TDR & Auto-Refund Dispute Engine
+                  Ticket Deposit Receipt (TDR) & Automated Refund Claims
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Automated IRCTC Gazette Rule 14.1–14.22 clause deduction & net refund adjudication
+                Indian Railways Gazette Rules (Rule 14.1 - 14.22) automated dispute evaluation & zero-clerkage refund claims
               </p>
             </div>
           </div>

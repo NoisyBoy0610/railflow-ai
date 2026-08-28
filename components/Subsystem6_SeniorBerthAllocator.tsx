@@ -59,11 +59,11 @@ export const Subsystem6_SeniorBerthAllocator: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 6
+                <span className="px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-extrabold uppercase">
+                  Lower Berth Co-Location
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Senior Citizen & Family Berth Proximity Allocator
+                  Senior Citizen (SS) & Family Lower Berth Allocator
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">

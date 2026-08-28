@@ -26,15 +26,15 @@ export const Subsystem3_MultiLegOptimizer: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 3
+                <span className="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-extrabold uppercase">
+                  Zero Waitlist Engine
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Smart Multi-Leg & Break-Journey Routing Optimizer
+                  Smart Connecting Journey & Split-Seat Optimizer
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Graph pathfinder for guaranteed confirmed seats via Split-Seat & Junction Transfer when direct trains are WL/Regret
+                Graph pathfinder for guaranteed confirmed berths via Split-Seat & Junction Transfer when direct trains are WL/Regret
               </p>
             </div>
           </div>

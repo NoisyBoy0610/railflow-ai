@@ -17,7 +17,6 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
     onSelectTab(tabId);
     setIsMoreMenuOpen(false);
 
-    // Haptic feedback for mobile devices
     if (typeof window !== 'undefined' && 'navigator' in window && 'vibrate' in navigator) {
       try {
         navigator.vibrate(30);
@@ -25,22 +24,23 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
     }
   };
 
-  const moreSubsystems = [
-    { id: 'golden_flow', title: '🚀 End-to-End Golden Flow', desc: 'Complete 5-Step Hackathon Demo', icon: Award, badge: 'Judges' },
-    { id: 'subsystem1', title: 'AI TDR & Auto-Refund', desc: 'Rule 14.1-14.22 Dispute Adjudication', icon: Scale, badge: 'Subsystem 1' },
-    { id: 'subsystem4', title: 'Zero-Friction Checkout', desc: 'No Captcha & Transparent Fares', icon: Sparkles, badge: 'Subsystem 4' },
-    { id: 'subsystem5', title: 'Quota & WL Predictor', desc: 'GNWL, RLWL & RAC Odds', icon: Compass, badge: 'Subsystem 5' },
-    { id: 'subsystem6', title: 'Senior Berth Allocator', desc: 'Lower Berth (SS) Co-Location', icon: Users, badge: 'Subsystem 6' },
-    { id: 'subsystem8', title: 'Disruption Copilot', desc: '>3hr Delay Radar & Free Reschedule', icon: AlertCircle, badge: 'Subsystem 8' },
-    { id: 'subsystem9', title: 'Station Concierge', desc: 'Coolie Tariff, Buggy & Meals', icon: Accessibility, badge: 'Subsystem 9' },
-    { id: 'subsystem10', title: 'RailMadad Vision AI', desc: 'Photo Grievance Triage', icon: Camera, badge: 'Subsystem 10' },
-    { id: 'pnr_tracker', title: 'Live PNR Radar', desc: 'Chart Status & Seat Map', icon: Compass, badge: 'Utility' },
-    { id: 'live_radar', title: 'GPS Running Status', desc: 'Live Train Timeline', icon: Radio, badge: 'Utility' },
+  const allServices = [
+    { id: 'golden_flow', title: 'Unified Booking Lifecycle', desc: 'Step-by-Step Ticket Journey', icon: Award, badge: 'Unified' },
+    { id: 'subsystem1', title: 'TDR & Gazette Auto-Refund Claims', desc: 'Rule 14.1-14.22 Dispute Adjudication', icon: Scale, badge: 'Refunds' },
+    { id: 'subsystem3', title: 'Connecting Route & Split-Seat Finder', desc: 'Guaranteed 100% CNF Routing', icon: GitFork, badge: 'Routing' },
+    { id: 'subsystem4', title: 'Instant Express Checkout', desc: 'Zero Dark-Patterns & 1-Click Pay', icon: Sparkles, badge: 'Fast Pay' },
+    { id: 'subsystem5', title: 'Waitlist & RAC Predictor', desc: 'GNWL, RLWL & RAC Clearance Odds', icon: Compass, badge: 'Predictor' },
+    { id: 'subsystem6', title: 'Senior SS Lower Berth Allocator', desc: 'Lower Berth Co-Location Engine', icon: Users, badge: 'Senior SS' },
+    { id: 'subsystem8', title: 'Live Disruption & Delay Copilot', desc: '>3hr Delay Radar & Free Reschedule', icon: AlertCircle, badge: 'Copilot' },
+    { id: 'subsystem9', title: 'Station Concierge & Buggy Services', desc: 'Standardized Coolie Tariff & Wheelchair', icon: Accessibility, badge: 'Station' },
+    { id: 'subsystem10', title: 'RailMadad Grievance Redressal', desc: 'Vision AI Photo Complaint Triage', icon: Camera, badge: 'Grievance' },
+    { id: 'pnr_tracker', title: 'Live PNR Status & Coach Position', desc: 'Chart Status & Train Rake Map', icon: Compass, badge: 'PNR' },
+    { id: 'live_radar', title: 'GPS Live Train Running Status', desc: 'Live Train Timeline & Halts', icon: Radio, badge: 'Live GPS' },
   ];
 
   return (
     <>
-      {/* More Services Bottom Sheet Drawer for Mobile */}
+      {/* Services Bottom Sheet Drawer for Mobile */}
       {isMoreMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex flex-col justify-end bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
           <div 
@@ -51,7 +51,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-                <h3 className="text-sm font-black text-slate-900">All 10 RailFlow Subsystems</h3>
+                <h3 className="text-sm font-black text-slate-900">All Passenger Services</h3>
               </div>
               <button
                 onClick={() => setIsMoreMenuOpen(false)}
@@ -62,14 +62,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
             </div>
 
             <div className="grid grid-cols-1 gap-2">
-              {moreSubsystems.map((sub) => {
+              {allServices.map((sub) => {
                 const Icon = sub.icon;
                 const isActive = activeTab === sub.id;
                 return (
                   <button
                     key={sub.id}
                     onClick={() => handleNavClick(sub.id)}
-                    className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between transition-all ${
+                    className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                       isActive
                         ? 'bg-orange-50 border-orange-500 ring-1 ring-orange-500'
                         : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
@@ -98,46 +98,46 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
       )}
 
       {/* Floating Bottom Nav Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#0F2C59]/95 backdrop-blur-lg border-t border-slate-800 px-3 py-2 flex items-center justify-around shadow-2xl safe-area-bottom">
-        {/* Golden Flow */}
-        <button
-          onClick={() => handleNavClick('golden_flow')}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all ${
-            activeTab === 'golden_flow' ? 'text-orange-400' : 'text-slate-400'
-          }`}
-        >
-          <Award className="w-5 h-5" />
-          <span className="text-[10px] font-bold">Journey</span>
-        </button>
-
-        {/* Search */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#0B2545]/95 backdrop-blur-lg border-t border-slate-800 px-3 py-2 flex items-center justify-around shadow-2xl safe-area-bottom">
+        {/* Book */}
         <button
           onClick={() => handleNavClick('overview')}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all cursor-pointer ${
             activeTab === 'overview' ? 'text-orange-400' : 'text-slate-400'
           }`}
         >
           <Search className="w-5 h-5" />
-          <span className="text-[10px] font-bold">Search</span>
+          <span className="text-[10px] font-bold">Book</span>
         </button>
 
-        {/* Center Floating Voice Button */}
+        {/* PNR */}
+        <button
+          onClick={() => handleNavClick('pnr_tracker')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all cursor-pointer ${
+            activeTab === 'pnr_tracker' ? 'text-orange-400' : 'text-slate-400'
+          }`}
+        >
+          <Compass className="w-5 h-5" />
+          <span className="text-[10px] font-bold">PNR</span>
+        </button>
+
+        {/* Center Floating Voice Assistant Button */}
         <div className="relative -top-5">
           <button
             onClick={() => handleNavClick('subsystem2')}
-            className="w-13 h-13 w-[52px] h-[52px] rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white flex items-center justify-center shadow-lg shadow-orange-500/50 ring-4 ring-[#0F2C59] active:scale-95 transition-transform"
+            className="w-[52px] h-[52px] rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 text-white flex items-center justify-center shadow-lg shadow-orange-500/50 ring-4 ring-[#0B2545] active:scale-95 transition-transform cursor-pointer"
           >
             <Mic className="w-6 h-6" />
           </button>
           <span className="block text-center text-[9px] font-black text-orange-300 mt-1 uppercase tracking-tight">
-            Voice AI
+            AskDISHA
           </span>
         </div>
 
-        {/* Tatkal Speedrun */}
+        {/* Tatkal Portal */}
         <button
           onClick={() => handleNavClick('subsystem7')}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all cursor-pointer ${
             activeTab === 'subsystem7' ? 'text-orange-400' : 'text-slate-400'
           }`}
         >
@@ -145,15 +145,15 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
           <span className="text-[10px] font-bold">Tatkal</span>
         </button>
 
-        {/* More Drawer */}
+        {/* More Services */}
         <button
           onClick={() => setIsMoreMenuOpen(true)}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all ${
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all cursor-pointer ${
             isMoreMenuOpen ? 'text-orange-400' : 'text-slate-400'
           }`}
         >
           <Menu className="w-5 h-5" />
-          <span className="text-[10px] font-bold">More (10)</span>
+          <span className="text-[10px] font-bold">Services</span>
         </button>
       </nav>
     </>

@@ -33,11 +33,11 @@ export const Subsystem8_DisruptionCopilot: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 8
+                <span className="px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold uppercase">
+                  Real-Time Protection
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Dynamic Disruption & Rescheduling Copilot
+                  Live Train Disruption & Rescheduling Copilot
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">

@@ -111,15 +111,15 @@ export const Subsystem7_TatkalSpeedrun: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 7
+                <span className="px-2 py-0.5 rounded bg-amber-500 text-white text-[10px] font-extrabold uppercase">
+                  10:00 / 11:00 AM Protocol
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Tatkal Rush Rapid-Form Pre-Flight Sandbox
+                  Tatkal Fast-Track Booking & Pre-Fill Portal
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Local pre-flight builder for sub-10-second booking when the 10:00 / 11:00 AM Tatkal window opens
+                Automated master passenger pre-injection & 1-click tokenized payment for zero-latency Tatkal booking
               </p>
             </div>
           </div>

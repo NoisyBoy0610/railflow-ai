@@ -29,15 +29,15 @@ export const Subsystem5_QuotaWLAdvisor: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 5
+                <span className="px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-extrabold uppercase">
+                  PRS Probability Engine
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Explainable Quota & Waitlist (WL/RAC) Predictor
+                  Waitlist (GNWL / RLWL / PQWL) & RAC Confirmation Predictor
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Demystifying cryptic IRCTC codes (GNWL, RLWL, PQWL, RAC) with confirmation probability & quota recommendations
+                Transparent confirmation probabilities, cancellation trends, and quota bypass recommendations based on historical charts
               </p>
             </div>
           </div>

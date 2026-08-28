@@ -40,21 +40,21 @@ export default function Home() {
   const [searchClass, setSearchClass] = useState<TravelClass>('3A');
   const [searchQuota, setSearchQuota] = useState<QuotaType>('GN');
 
-  const subsystems = [
-    { id: 'golden_flow', title: '🚀 End-to-End Golden Flow', short: 'Golden Flow', icon: Award, badge: 'Judge Showcase' },
-    { id: 'overview', title: 'Train Search & Booking', short: 'Search', icon: Search, badge: 'Main Hub' },
-    { id: 'subsystem2', title: 'Indic Voice Booking', short: 'Voice AI', icon: Mic, badge: 'Subsystem 2' },
-    { id: 'subsystem3', title: 'Smart Multi-Leg Pathfinder', short: 'Split Seat', icon: GitFork, badge: 'Subsystem 3' },
-    { id: 'subsystem4', title: 'Zero-Friction Checkout', short: 'Anti-Dark-Pattern', icon: Zap, badge: 'Subsystem 4' },
-    { id: 'subsystem5', title: 'Quota & WL Predictor', short: 'WL Odds', icon: HelpCircle, badge: 'Subsystem 5' },
-    { id: 'subsystem6', title: 'Senior Berth Allocator', short: 'Senior SS', icon: Users, badge: 'Subsystem 6' },
-    { id: 'subsystem7', title: 'Tatkal Speedrun Sandbox', short: 'Tatkal Rush', icon: Timer, badge: 'Subsystem 7' },
-    { id: 'subsystem1', title: 'AI TDR & Auto-Refund', short: 'TDR Dispute', icon: Scale, badge: 'Subsystem 1' },
-    { id: 'subsystem8', title: 'Disruption Copilot', short: 'Delay Radar', icon: AlertCircle, badge: 'Subsystem 8' },
-    { id: 'subsystem9', title: 'Station Concierge', short: 'Coolie & Buggy', icon: Accessibility, badge: 'Subsystem 9' },
-    { id: 'subsystem10', title: 'RailMadad Vision AI', short: 'Vision Triage', icon: Camera, badge: 'Subsystem 10' },
-    { id: 'pnr_tracker', title: 'Live PNR Radar', short: 'PNR Status', icon: Compass, badge: 'Utility' },
-    { id: 'live_radar', title: 'GPS Running Status', short: 'Train GPS', icon: Radio, badge: 'Utility' },
+  const navigationServices = [
+    { id: 'golden_flow', title: 'Unified Booking Lifecycle', short: 'Booking Flow', icon: Award },
+    { id: 'overview', title: 'Train Search & Seat Availability', short: 'Search', icon: Search },
+    { id: 'subsystem2', title: 'AskDISHA 2.0 AI Voice Booking', short: 'Voice AI', icon: Mic },
+    { id: 'subsystem3', title: 'Connecting Route & Split-Seat Finder', short: 'Split Seat', icon: GitFork },
+    { id: 'subsystem4', title: 'Instant Express Checkout', short: 'Fast Checkout', icon: Zap },
+    { id: 'subsystem5', title: 'Waitlist & RAC Confirmation Predictor', short: 'WL Predictor', icon: HelpCircle },
+    { id: 'subsystem6', title: 'Senior Citizen & Family Lower Berth Allocator', short: 'Senior SS', icon: Users },
+    { id: 'subsystem7', title: 'Tatkal Fast-Track Portal (10 AM / 11 AM)', short: 'Tatkal Express', icon: Timer },
+    { id: 'subsystem1', title: 'TDR & Gazette Auto-Refund Claims', short: 'TDR Refunds', icon: Scale },
+    { id: 'subsystem8', title: 'Live Disruption & Delay Copilot', short: 'Delay Radar', icon: AlertCircle },
+    { id: 'subsystem9', title: 'Station Concierge & Buggy Services', short: 'Porter & Buggy', icon: Accessibility },
+    { id: 'subsystem10', title: 'RailMadad Grievance Redressal (Vision AI)', short: 'RailMadad', icon: Camera },
+    { id: 'pnr_tracker', title: 'Live PNR Status & Coach Position', short: 'PNR Radar', icon: Compass },
+    { id: 'live_radar', title: 'GPS Live Train Running Status', short: 'Live GPS', icon: Radio },
   ];
 
   const handleTabChange = (tabId: string) => {
@@ -80,9 +80,8 @@ export default function Home() {
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Hero Banner with Subsystem Quick Selector */}
-      <div className="bg-[#0F2C59] text-white pt-5 pb-8 sm:pt-8 sm:pb-12 px-4 sm:px-6 lg:px-8 border-b border-slate-800 relative overflow-hidden">
-        {/* Background Subtle Gradient Lights */}
+      {/* Official Railway Passenger Portal Header */}
+      <div className="bg-[#0B2545] text-white pt-5 pb-8 sm:pt-7 sm:pb-10 px-4 sm:px-6 lg:px-8 border-b border-slate-800 relative overflow-hidden">
         {!isLowBandwidth && (
           <>
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -90,61 +89,61 @@ export default function Home() {
           </>
         )}
 
-        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 relative z-10">
+        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-5 relative z-10">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-400 font-extrabold text-[10px] sm:text-xs border border-orange-500/30 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  Public Digital Infrastructure 2.0
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px] sm:text-xs border border-emerald-500/30 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Indian Railways Official Digital Platform
                 </span>
-                <span className="text-[10px] sm:text-xs text-slate-400 font-mono hidden sm:inline">Build What Moves India</span>
+                <span className="text-[10px] sm:text-xs text-slate-300 font-mono hidden sm:inline">CRiS PRS Connected</span>
               </div>
-              <h1 className="text-xl sm:text-4xl font-black tracking-tight text-white leading-tight">
-                RailFlow AI: IRCTC Autonomous Passenger OS
+              <h1 className="text-xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+                RailFlow — Next-Gen Railway Passenger Operating System
               </h1>
-              <p className="text-[11px] sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-                Complete End-to-End Railway Passenger Lifecycle with 10 integrated agentic subsystems — Indic voice booking, smart multi-leg break-journeys, biometric passkey checkouts, and AI TDR gazette refunds.
+              <p className="text-[11px] sm:text-xs text-slate-300 max-w-3xl leading-relaxed">
+                Empowering millions of Indian Railways passengers with AskDISHA 2.0 voice bookings, guaranteed split-seat routing, instant Tatkal checkouts, live GPS train tracking, and automated Gazette TDR refunds.
               </p>
             </div>
 
-            {/* Quick stats badge */}
+            {/* Platform Trust Badges */}
             <div className="hidden lg:flex items-center gap-3 bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
               <div className="text-center px-3 border-r border-slate-800">
-                <div className="text-lg font-black font-mono text-orange-400">10</div>
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Subsystems</div>
+                <div className="text-sm font-black font-mono text-orange-400">1.5M+</div>
+                <div className="text-[10px] text-slate-400 uppercase font-semibold">Daily Bookings</div>
               </div>
               <div className="text-center px-3 border-r border-slate-800">
-                <div className="text-lg font-black font-mono text-emerald-400">100%</div>
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">End-to-End</div>
+                <div className="text-sm font-black font-mono text-emerald-400">100%</div>
+                <div className="text-[10px] text-slate-400 uppercase font-semibold">IRCTC Gazette Compliant</div>
               </div>
               <div className="text-center px-3">
-                <div className="text-lg font-black font-mono text-blue-400">10</div>
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Indic Langs</div>
+                <div className="text-sm font-black font-mono text-blue-400">10</div>
+                <div className="text-[10px] text-slate-400 uppercase font-semibold">Indic Languages</div>
               </div>
             </div>
           </div>
 
-          {/* Subsystem Carousel / Tab Scroller */}
-          <div className="pt-1">
+          {/* Service Selector Tabs */}
+          <div className="pt-2">
             <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none touch-pan-x">
-              {subsystems.map((sub) => {
-                const Icon = sub.icon;
-                const isActive = activeTab === sub.id;
+              {navigationServices.map((service) => {
+                const Icon = service.icon;
+                const isActive = activeTab === service.id;
 
                 return (
                   <button
-                    key={sub.id}
-                    onClick={() => handleTabChange(sub.id)}
-                    className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                    key={service.id}
+                    onClick={() => handleTabChange(service.id)}
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                       isActive
                         ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25 scale-[1.02]'
                         : 'bg-slate-900/70 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:text-white'
                     }`}
                   >
                     <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-orange-400'}`} />
-                    <span className="hidden sm:inline">{sub.title}</span>
-                    <span className="sm:hidden">{sub.short}</span>
+                    <span className="hidden sm:inline">{service.title}</span>
+                    <span className="sm:hidden">{service.short}</span>
                   </button>
                 );
               })}
@@ -153,7 +152,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Service Content Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 pb-24 md:pb-8">
         {activeTab === 'golden_flow' && <EndToEndJourneyWizard />}
 
@@ -181,7 +180,6 @@ export default function Home() {
               setSearchClass(intent.classType);
               setSearchQuota(intent.quota);
               setActiveTab('overview');
-              soundEffects.playConfirmationChime();
             }}
           />
         )}
@@ -198,57 +196,17 @@ export default function Home() {
         {activeTab === 'live_radar' && <LiveTrainRadar />}
       </main>
 
-      {/* Mobile Fixed Bottom Navigation Bar */}
-      <MobileBottomNav
-        activeTab={activeTab}
-        onSelectTab={handleTabChange}
-      />
+      {/* Mobile Bottom Bar */}
+      <MobileBottomNav activeTab={activeTab} onSelectTab={handleTabChange} />
 
-      {/* Footer */}
-      <footer className="hidden md:block bg-slate-900 text-slate-400 border-t border-slate-800 text-xs py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold">
-              <TrainIcon className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="font-bold text-white text-sm">RailFlow AI (IRCTC 2.0)</p>
-              <p className="text-[11px] text-slate-500">Autonomous Public Digital Railway Infrastructure</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 text-xs text-slate-400">
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <Smartphone className="w-3.5 h-3.5" />
-              Mobile App PWA Ready
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <Fingerprint className="w-3.5 h-3.5" />
-              WebAuthn Passkeys Active
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <Award className="w-3.5 h-3.5" />
-              100% End-to-End Flow Connected
-            </span>
-          </div>
-        </div>
-      </footer>
-
-      {/* Auth Modal */}
+      {/* Modals */}
+      <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setIsApiKeyModalOpen(false)} />
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
         onLoginSuccess={(user) => setCurrentUser(user)}
         onLogout={() => setCurrentUser(null)}
-      />
-
-      {/* OpenAI Key Modal */}
-      <ApiKeyModal
-        isOpen={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
       />
     </div>
   );

@@ -32,11 +32,11 @@ export const Subsystem9_StationConcierge: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold uppercase">
-                  Subsystem 9
+                <span className="px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-extrabold uppercase">
+                  Station Services
                 </span>
                 <h2 className="text-xl font-black tracking-tight text-white">
-                  Single-Window Station Accessibility & Last-Mile Concierge
+                  Station Concierge, Buggy & Coolie Porter Booking
                 </h2>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
