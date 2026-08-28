@@ -132,6 +132,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             Live Train GPS
           </button>
           <button
+            onClick={() => onSelectTab('station_board')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'station_board' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            Station Board
+          </button>
+          <button
             onClick={() => onSelectTab('subsystem10')}
             className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
               activeTab === 'subsystem10' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'

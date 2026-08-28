@@ -36,6 +36,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
     { id: 'subsystem10', title: 'RailMadad Grievance Redressal', desc: 'Vision AI Photo Complaint Triage', icon: Camera, badge: 'Grievance' },
     { id: 'pnr_tracker', title: 'Live PNR Status & Coach Position', desc: 'Chart Status & Train Rake Map', icon: Compass, badge: 'PNR' },
     { id: 'live_radar', title: 'GPS Live Train Running Status', desc: 'Live Train Timeline & Halts', icon: Radio, badge: 'Live GPS' },
+    { id: 'station_board', title: 'Live Station Platform Display Board', desc: 'Real-time Arrivals & Departures', icon: Radio, badge: 'Platform' },
   ];
 
   return (

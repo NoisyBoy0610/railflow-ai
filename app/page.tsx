@@ -19,11 +19,12 @@ import { Subsystem10_RailMadadVision } from '@/components/Subsystem10_RailMadadV
 import { TrainSearchAndList } from '@/components/TrainSearchAndList';
 import { PNRTracker } from '@/components/PNRTracker';
 import { LiveTrainRadar } from '@/components/LiveTrainRadar';
+import { LiveStationBoard } from '@/components/LiveStationBoard';
 import { IndicLanguage, TravelClass, QuotaType } from '@/lib/types';
 import { soundEffects } from '@/lib/audio';
 import { 
   Sparkles, Train as TrainIcon, Mic, GitFork, Zap, HelpCircle, Users, 
-  Timer, Scale, AlertCircle, Accessibility, Camera, Search, Radio, Compass, ShieldCheck, Smartphone, Fingerprint, Award
+  Timer, Scale, AlertCircle, Accessibility, Camera, Search, Radio, Compass, ShieldCheck, Smartphone, Fingerprint, Award, Tv
 } from 'lucide-react';
 
 export default function Home() {
@@ -55,6 +56,7 @@ export default function Home() {
     { id: 'subsystem10', title: 'RailMadad Grievance Redressal (Vision AI)', short: 'RailMadad', icon: Camera },
     { id: 'pnr_tracker', title: 'Live PNR Status & Coach Position', short: 'PNR Radar', icon: Compass },
     { id: 'live_radar', title: 'GPS Live Train Running Status', short: 'Live GPS', icon: Radio },
+    { id: 'station_board', title: 'Live Station Arrival & Departure Platform Board', short: 'Station Board', icon: Tv },
   ];
 
   const handleTabChange = (tabId: string) => {
@@ -194,6 +196,7 @@ export default function Home() {
         {activeTab === 'subsystem10' && <Subsystem10_RailMadadVision />}
         {activeTab === 'pnr_tracker' && <PNRTracker />}
         {activeTab === 'live_radar' && <LiveTrainRadar />}
+        {activeTab === 'station_board' && <LiveStationBoard />}
       </main>
 
       {/* Mobile Bottom Bar */}
