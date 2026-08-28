@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-navy: #0F2C59;
+  --primary-saffron: #FF7A00;
+  --bg-surface: #F8F9FA;
+  --confirmed-green: #16A34A;
+  --waitlist-red: #DC2626;
+  --rac-amber: #D97706;
+}
+
+body {
+  background-color: var(--bg-surface);
+  color: #1E293B;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-panel-navy {
+  background: rgba(15, 44, 89, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Railway track strip styling */
+.railway-track-stripe {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 122, 0, 0.1),
+    rgba(255, 122, 0, 0.1) 10px,
+    rgba(15, 44, 89, 0.05) 10px,
+    rgba(15, 44, 89, 0.05) 20px
+  );
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Train motion pulse animation */
+@keyframes trainGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 122, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 122, 0, 0.65);
+  }
+}
+
+.animate-train-glow {
+  animation: trainGlow 2.5s infinite ease-in-out;
+}
