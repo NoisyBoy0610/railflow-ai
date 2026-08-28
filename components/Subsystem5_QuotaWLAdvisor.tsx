@@ -1,31 +1,37 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HelpCircle, Sparkles, TrendingUp, AlertCircle, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { HelpCircle, Sparkles, TrendingUp, AlertCircle, CheckCircle2, ShieldCheck, ArrowRight, RefreshCw, Calculator, Compass } from 'lucide-react';
 import { aiEngine, QuotaWLInsight } from '@/lib/aiEngine';
 import { soundEffects } from '@/lib/audio';
 
 export const Subsystem5_QuotaWLAdvisor: React.FC = () => {
   const [selectedCode, setSelectedCode] = useState<string>('GNWL');
+  const [selectedClass, setSelectedClass] = useState<string>('3A');
   const [wlNumber, setWlNumber] = useState<number>(34);
+  const [isCalculating, setIsCalculating] = useState<boolean>(false);
   const [insight, setInsight] = useState<QuotaWLInsight>(aiEngine.explainWaitlistQuota('GNWL', 34));
 
-  const handleUpdate = (code: string, num: number) => {
-    setSelectedCode(code);
-    setWlNumber(num);
-    const res = aiEngine.explainWaitlistQuota(code, num);
-    setInsight(res);
+  const handleCalculate = () => {
+    setIsCalculating(true);
     soundEffects.playTick();
+
+    setTimeout(() => {
+      setIsCalculating(false);
+      const res = aiEngine.explainWaitlistQuota(selectedCode, wlNumber);
+      setInsight(res);
+      soundEffects.playConfirmationChime();
+    }, 450);
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      {/* Subsystem Header */}
-      <div className="bg-gradient-to-r from-[#0F2C59] to-[#1A407A] p-6 text-white">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-fadeIn">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#0B2545] to-[#133E6E] p-6 text-white">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-orange-500/20 border border-orange-400/30 flex items-center justify-center text-orange-400">
-              <HelpCircle className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400">
+              <Compass className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -44,162 +50,137 @@ export const Subsystem5_QuotaWLAdvisor: React.FC = () => {
 
           <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10 text-xs">
             <TrendingUp className="w-4 h-4 text-orange-400" />
-            <span>AI Probabilistic Engine</span>
+            <span>AI Chart Velocity Model</span>
           </div>
         </div>
       </div>
 
-      <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Code Selector & Number Slider */}
-        <div className="lg:col-span-5 space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Select Waitlist Code to Explain
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {['GNWL', 'RLWL', 'PQWL', 'RAC'].map((code) => (
-                <button
-                  key={code}
-                  onClick={() => handleUpdate(code, wlNumber)}
-                  className={`py-2.5 px-3 rounded-xl text-xs font-mono font-bold text-center border transition-all ${
-                    selectedCode === code
-                      ? 'bg-orange-500 text-white border-orange-600 shadow-sm'
-                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                  }`}
-                >
-                  {code}
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="p-6 space-y-6">
+        {/* Interactive Query Card */}
+        <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
+          <span className="text-xs font-bold text-slate-800 uppercase block">
+            Enter Current Waitlist Status to Predict Confirmation Odds:
+          </span>
 
-          <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Current Waitlist Position:
-              </label>
-              <span className="text-sm font-black font-mono text-orange-600">
-                {selectedCode} {wlNumber}
-              </span>
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Waitlist Quota Code</label>
+              <select
+                value={selectedCode}
+                onChange={(e) => setSelectedCode(e.target.value)}
+                className="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+              >
+                <option value="GNWL">GNWL (General Waitlist - Clears 1st)</option>
+                <option value="RLWL">RLWL (Remote Location Quota)</option>
+                <option value="PQWL">PQWL (Pooled Quota - Low Clearance)</option>
+                <option value="RAC">RAC (Reservation Against Cancellation)</option>
+              </select>
             </div>
-            <input
-              type="range"
-              min={1}
-              max={100}
-              value={wlNumber}
-              onChange={(e) => handleUpdate(selectedCode, parseInt(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
-            />
-            <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
-              <span>WL 1 (Near Chart Conversion)</span>
-              <span>WL 50</span>
-              <span>WL 100 (Regret Zone)</span>
-            </div>
-          </div>
 
-          {/* Quick Presets */}
-          <div className="pt-2">
-            <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">
-              Common Test Presets:
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                onClick={() => handleUpdate('GNWL', 12)}
-                className="text-[11px] bg-slate-100 hover:bg-orange-50 hover:text-orange-700 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700"
+            <div>
+              <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Travel Class</label>
+              <select
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
+                className="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
               >
-                🟢 GNWL 12 (High Chance)
-              </button>
+                <option value="3A">3A (3-Tier AC)</option>
+                <option value="2A">2A (2-Tier AC)</option>
+                <option value="1A">1A (First AC)</option>
+                <option value="SL">SL (Sleeper)</option>
+                <option value="CC">CC (Chair Car)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Current Waitlist Position</label>
+              <input
+                type="number"
+                min={1}
+                max={250}
+                value={wlNumber}
+                onChange={(e) => setWlNumber(parseInt(e.target.value, 10) || 1)}
+                className="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-center"
+              />
+            </div>
+
+            <div className="flex items-end">
               <button
-                onClick={() => handleUpdate('RLWL', 18)}
-                className="text-[11px] bg-slate-100 hover:bg-orange-50 hover:text-orange-700 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700"
+                onClick={handleCalculate}
+                disabled={isCalculating}
+                className="w-full p-2.5 bg-[#0B2545] hover:bg-[#133E6E] text-white rounded-lg font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
-                🟡 RLWL 18 (Moderate)
-              </button>
-              <button
-                onClick={() => handleUpdate('PQWL', 35)}
-                className="text-[11px] bg-slate-100 hover:bg-orange-50 hover:text-orange-700 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700"
-              >
-                🔴 PQWL 35 (Low Chance)
-              </button>
-              <button
-                onClick={() => handleUpdate('RAC', 8)}
-                className="text-[11px] bg-slate-100 hover:bg-orange-50 hover:text-orange-700 px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700"
-              >
-                🟢 RAC 8 (Guaranteed Travel)
+                {isCalculating ? (
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Calculator className="w-3.5 h-3.5 text-orange-400" />
+                )}
+                <span>Analyze Odds</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Right Column: AI Explainer Card & Probability Meter */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-slate-900 text-white font-mono font-bold text-xs">
-                    {insight.code}
-                  </span>
-                  <h4 className="text-sm font-bold text-slate-900">
-                    {insight.fullName}
-                  </h4>
-                </div>
-                <span className="text-[11px] text-slate-500 mt-0.5 block">
-                  Priority Rank: #{insight.priorityLevel === 0 ? 'Guaranteed Boarding' : insight.priorityLevel + ' in Indian Railways Quota Order'}
-                </span>
-              </div>
-
-              <div className="text-right">
-                <span className="text-[10px] text-slate-400 block uppercase font-semibold">Confirmation Odds</span>
-                <span className={`text-2xl font-black font-mono ${
-                  insight.confirmationChancePercent >= 75
-                    ? 'text-emerald-600'
-                    : insight.confirmationChancePercent >= 45
-                    ? 'text-amber-600'
-                    : 'text-rose-600'
-                }`}>
-                  {insight.confirmationChancePercent}%
-                </span>
-              </div>
+        {/* Prediction Results Display */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 animate-fadeIn">
+          {/* Probability Metric Card */}
+          <div className="md:col-span-5 p-5 bg-slate-900 text-white rounded-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-400 uppercase">Estimated Confirmation Odds</span>
+              <span className="px-2 py-0.5 bg-orange-500/20 text-orange-400 text-[10px] font-bold rounded">
+                Priority Rank #{insight.priorityLevel}
+              </span>
             </div>
 
-            {/* Probability Progress Bar */}
-            <div>
-              <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    insight.confirmationChancePercent >= 75
-                      ? 'bg-emerald-500'
-                      : insight.confirmationChancePercent >= 45
-                      ? 'bg-amber-500'
-                      : 'bg-rose-500'
-                  }`}
-                  style={{ width: `${insight.confirmationChancePercent}%` }}
-                />
+            <div className="text-center py-3">
+              <div className={`text-4xl font-black font-mono ${
+                insight.confirmationChancePercent >= 80
+                  ? 'text-emerald-400'
+                  : insight.confirmationChancePercent >= 50
+                  ? 'text-amber-400'
+                  : 'text-rose-400'
+              }`}>
+                {insight.confirmationChancePercent}%
               </div>
+              <p className="text-xs text-slate-400 mt-1">
+                {selectedCode} Position #{wlNumber} in {selectedClass}
+              </p>
             </div>
 
-            {/* AI Deep Explanation */}
-            <div className="p-3.5 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
-              <p className="font-semibold text-slate-900 mb-1">Why does this quota behave this way?</p>
-              {insight.explanation}
+            <div className="p-3 bg-slate-800 rounded-xl space-y-1 text-xs text-slate-300">
+              <div className="font-bold text-white">First Chart Preparation Window:</div>
+              <p className="text-[11px] text-slate-400">
+                4 hours before scheduled departure (clears RAC and vacant lower berths automatically).
+              </p>
             </div>
+          </div>
 
-            {/* Pro Tip */}
-            <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
-              <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-bold">Pro-Tip / Insider Strategy:</span> {insight.proTip}
+          {/* Detailed Explanation & Pro-Tip Card */}
+          <div className="md:col-span-7 space-y-4">
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+              <div className="flex items-center gap-2 font-bold text-xs text-slate-900">
+                <HelpCircle className="w-4 h-4 text-blue-600" />
+                <span>What is {insight.code} ({insight.fullName})?</span>
               </div>
+              <p className="text-xs text-slate-700 leading-relaxed">
+                {insight.explanation}
+              </p>
             </div>
 
-            {/* Alternative suggestion */}
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-2">
+              <div className="flex items-center gap-2 font-bold text-xs text-amber-950">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+                <span>IRCTC Clearance Strategy Pro-Tip:</span>
+              </div>
+              <p className="text-xs text-amber-900 leading-relaxed font-medium">
+                {insight.proTip}
+              </p>
+            </div>
+
             {insight.alternativeSuggestion && (
-              <div className="p-3 bg-blue-50/80 rounded-xl border border-blue-200 text-xs text-blue-900 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span><strong>Recommended Alternative:</strong> {insight.alternativeSuggestion}</span>
-                </div>
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 font-semibold flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{insight.alternativeSuggestion}</span>
               </div>
             )}
           </div>

@@ -1,42 +1,50 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Users, UserCheck, CheckCircle2, Sparkles, Heart, Plus, Trash2, ShieldCheck, ArrowRight } from 'lucide-react';
-import { Passenger } from '@/lib/types';
+import { Users, UserPlus, CheckCircle2, ShieldCheck, Heart, AlertCircle, Trash2, ArrowRight, Bed, Plus } from 'lucide-react';
 import { soundEffects } from '@/lib/audio';
+import { PassengerInput, validatePassenger } from '@/lib/validation';
 
 export const Subsystem6_SeniorBerthAllocator: React.FC = () => {
-  const [passengers, setPassengers] = useState<Passenger[]>([
-    { id: '1', name: 'Ramesh Sundaram', age: 68, gender: 'M', berthPreference: 'L', foodPreference: 'Veg' },
-    { id: '2', name: 'Kalyani Sundaram', age: 64, gender: 'F', berthPreference: 'L', foodPreference: 'Veg' },
-    { id: '3', name: 'Arjun Sundaram', age: 34, gender: 'M', berthPreference: 'U', foodPreference: 'Non-Veg' },
-    { id: '4', name: 'Ananya Sundaram', age: 7, gender: 'F', berthPreference: 'M', foodPreference: 'Veg' },
+  const [passengers, setPassengers] = useState<PassengerInput[]>([
+    { name: 'Kalyani Sundaram', age: 64, gender: 'F', berthPreference: 'LB' },
+    { name: 'Ramesh Sundaram', age: 34, gender: 'M', berthPreference: 'MB' },
+    { name: 'Priya Sharma', age: 29, gender: 'F', berthPreference: 'UB' }
   ]);
 
-  const [isAllocated, setIsAllocated] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>('');
-  const [newAge, setNewAge] = useState<number>(30);
-  const [newGender, setNewGender] = useState<'M' | 'F'>('M');
+  const [newAge, setNewAge] = useState<number>(68);
+  const [newGender, setNewGender] = useState<'M' | 'F' | 'T'>('M');
+  const [selectedCoach, setSelectedCoach] = useState<string>('B2');
 
-  const addPassenger = () => {
-    if (!newName.trim()) return;
-    const p: Passenger = {
-      id: Date.now().toString(),
-      name: newName.trim(),
-      age: newAge,
-      gender: newGender,
-      berthPreference: 'NONE',
-      foodPreference: 'Veg'
-    };
+  const [isAllocated, setIsAllocated] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleAddPassenger = () => {
+    setErrorMessage(null);
+    const p: PassengerInput = { name: newName.trim(), age: newAge, gender: newGender, berthPreference: 'LB' };
+    const val = validatePassenger(p, passengers.length + 1);
+    if (!val.isValid) {
+      setErrorMessage(val.error || 'Invalid passenger');
+      soundEffects.playAlert();
+      return;
+    }
+
     setPassengers([...passengers, p]);
     setNewName('');
     setIsAllocated(false);
     soundEffects.playTick();
   };
 
-  const removePassenger = (id: string) => {
-    setPassengers(passengers.filter(p => p.id !== id));
+  const handleRemovePassenger = (idx: number) => {
+    if (passengers.length <= 1) {
+      setErrorMessage('At least one passenger is required.');
+      return;
+    }
+    setPassengers(passengers.filter((_, i) => i !== idx));
     setIsAllocated(false);
+    setErrorMessage(null);
+    soundEffects.playTick();
   };
 
   const handleRunAllocation = () => {
@@ -44,17 +52,19 @@ export const Subsystem6_SeniorBerthAllocator: React.FC = () => {
     soundEffects.playConfirmationChime();
   };
 
-  // Compute allocation logic
-  const seniors = passengers.filter(p => (p.gender === 'M' && p.age >= 60) || (p.gender === 'F' && p.age >= 45));
-  const younger = passengers.filter(p => !((p.gender === 'M' && p.age >= 60) || (p.gender === 'F' && p.age >= 45)));
+  // Grouping logic: Identify seniors (M >= 60, F >= 45)
+  const isSenior = (p: PassengerInput) => {
+    const age = typeof p.age === 'string' ? parseInt(p.age, 10) : p.age;
+    return (p.gender === 'F' && age >= 45) || (p.gender === 'M' && age >= 60);
+  };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      {/* Subsystem Header */}
-      <div className="bg-gradient-to-r from-[#0F2C59] to-[#1A407A] p-6 text-white">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-fadeIn">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#0B2545] to-[#133E6E] p-6 text-white">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-orange-500/20 border border-orange-400/30 flex items-center justify-center text-orange-400">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400">
               <Users className="w-6 h-6" />
             </div>
             <div>
@@ -72,213 +82,200 @@ export const Subsystem6_SeniorBerthAllocator: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1.5 rounded-xl border border-emerald-400/30 text-emerald-300 text-xs">
-            <Heart className="w-4 h-4 text-rose-400" />
-            <span>Senior Friendly Guarantee</span>
+          <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1.5 rounded-xl border border-emerald-400/30 text-emerald-300 text-xs font-bold">
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <span>Zero Coach Separation Policy</span>
           </div>
         </div>
       </div>
 
-      <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Passenger Management */}
-        <div className="lg:col-span-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Passenger Matrix ({passengers.length} Booked)
-            </h3>
-            <span className="text-xs text-emerald-600 font-semibold">
-              {seniors.length} Senior Citizens Detected
-            </span>
+      <div className="p-6 space-y-6">
+        {errorMessage && (
+          <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs font-semibold text-rose-800 flex items-center gap-2 animate-fadeIn">
+            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <span>{errorMessage}</span>
           </div>
+        )}
 
-          {/* Passenger list */}
-          <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-            {passengers.map((p) => {
-              const isSenior = (p.gender === 'M' && p.age >= 60) || (p.gender === 'F' && p.age >= 45);
-              return (
-                <div
-                  key={p.id}
-                  className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
-                    isSenior
-                      ? 'bg-amber-50/70 border-amber-300'
-                      : 'bg-slate-50 border-slate-200'
-                  }`}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column: Build Passenger Roster */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+              <span className="text-xs font-bold text-slate-800 uppercase block">1. Add New Traveller to Group</span>
+
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="Traveller Name (e.g. Ramesh, Sunita)"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold"
+                />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Age</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={120}
+                      value={newAge}
+                      onChange={(e) => setNewAge(parseInt(e.target.value, 10) || 1)}
+                      className="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Gender</label>
+                    <select
+                      value={newGender}
+                      onChange={(e) => setNewGender(e.target.value as any)}
+                      className="w-full p-2 bg-white border border-slate-300 rounded-lg text-xs font-bold"
+                    >
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
+                      <option value="T">Transgender</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleAddPassenger}
+                  className="w-full py-2 bg-[#0B2545] hover:bg-[#133E6E] text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
-                      isSenior ? 'bg-amber-500 text-white' : 'bg-slate-200 text-slate-700'
-                    }`}>
-                      {p.gender}
-                    </div>
+                  <Plus className="w-4 h-4" />
+                  <span>Add Passenger to Party</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Current Party List */}
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-slate-700 uppercase block">
+                Travel Party Roster ({passengers.length} Passengers)
+              </span>
+
+              {passengers.map((p, idx) => {
+                const senior = isSenior(p);
+                return (
+                  <div key={idx} className="p-3 bg-white border border-slate-200 rounded-xl flex items-center justify-between shadow-xs">
                     <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-xs text-slate-900">{p.name}</span>
-                        {isSenior && (
-                          <span className="px-1.5 py-0.2 rounded bg-amber-200 text-amber-900 font-bold text-[9px] uppercase">
-                            Senior Citizen (SS)
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-xs text-slate-900">{p.name || `Passenger ${idx + 1}`}</span>
+                        {senior ? (
+                          <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                            Senior (SS Eligible)
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px]">
+                            General Pax
                           </span>
                         )}
                       </div>
-                      <span className="text-[11px] text-slate-500">
-                        Age {p.age} • {p.foodPreference}
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        {p.gender} • Age {p.age}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleRemovePassenger(idx)}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 rounded transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right Column: Coach Bay Visualizer */}
+          <div className="lg:col-span-7 space-y-4">
+            <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800 uppercase flex items-center gap-1.5">
+                  <Bed className="w-4 h-4 text-blue-600" />
+                  Allocated Coach {selectedCoach} Bay Visualizer (LHB 3-Tier AC):
+                </span>
+                <span className="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded text-[10px] font-bold">
+                  Same Bay Clustered
+                </span>
+              </div>
+
+              {/* Coach Bay Layout Simulation (8 Berths in 1 Bay) */}
+              <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-3">
+                <div className="text-xs text-slate-400 text-center pb-2 border-b border-slate-800 font-mono">
+                  Coach {selectedCoach} • Bay #3 (Berths 17 to 24)
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Left Side: Main 6-Berth Section */}
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-bold text-slate-400 block uppercase">Main Compartment</span>
+                    
+                    {/* Lower Berth (Assigned to Senior) */}
+                    <div className="p-2.5 bg-emerald-600/30 border border-emerald-400/50 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="font-mono font-bold text-xs text-emerald-300 block">Berth 17 (Lower - LB)</span>
+                        <span className="text-[11px] text-white font-semibold">
+                          {passengers[0]?.name || 'Senior Citizen'}
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 bg-emerald-500 text-slate-950 text-[10px] font-black rounded">
+                        SS Quota
                       </span>
+                    </div>
+
+                    {/* Middle Berth (Assigned to Younger Companion) */}
+                    <div className="p-2.5 bg-blue-600/30 border border-blue-400/50 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="font-mono font-bold text-xs text-blue-300 block">Berth 18 (Middle - MB)</span>
+                        <span className="text-[11px] text-white font-semibold">
+                          {passengers[1]?.name || 'Accompanying Pax'}
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 bg-blue-500 text-white text-[10px] font-black rounded">
+                        Paired
+                      </span>
+                    </div>
+
+                    {/* Upper Berth */}
+                    <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="font-mono font-bold text-xs text-slate-300 block">Berth 19 (Upper - UB)</span>
+                        <span className="text-[11px] text-slate-300">
+                          {passengers[2]?.name || 'Vacant / General'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">UB</span>
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => removePassenger(p.id)}
-                    className="p-1 text-slate-400 hover:text-rose-600 transition-colors"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+                  {/* Right Side: Side Berths */}
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-bold text-slate-400 block uppercase">Side Aisle Section</span>
 
-          {/* Quick Add Form */}
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-            <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
-              Add Another Passenger to Family Group:
-            </span>
-            <div className="grid grid-cols-12 gap-2">
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                className="col-span-6 px-2.5 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
-              />
-              <input
-                type="number"
-                placeholder="Age"
-                value={newAge}
-                onChange={(e) => setNewAge(parseInt(e.target.value) || 0)}
-                className="col-span-3 px-2 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
-              />
-              <select
-                value={newGender}
-                onChange={(e) => setNewGender(e.target.value as 'M' | 'F')}
-                className="col-span-3 px-2 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
-              >
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-              </select>
-            </div>
-            <button
-              onClick={addPassenger}
-              className="w-full py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add to Family Matrix</span>
-            </button>
-          </div>
+                    <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="font-mono font-bold text-xs text-slate-300 block">Berth 23 (Side Lower - SL)</span>
+                        <span className="text-[11px] text-slate-400">General Reservation</span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">SL</span>
+                    </div>
 
-          <button
-            onClick={handleRunAllocation}
-            className="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl font-bold text-xs shadow-md shadow-orange-500/20 flex items-center justify-center gap-2 transition-all"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Run AI Berth Proximity & Senior Quota Allocator</span>
-          </button>
-        </div>
-
-        {/* Right Column: Visual Coach Compartment Map */}
-        <div className="lg:col-span-6 space-y-4">
-          <div className="p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 shadow-md space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <div>
-                <span className="text-[10px] text-orange-400 font-bold uppercase tracking-wider block">Coach B2 (3AC)</span>
-                <h4 className="text-xs font-bold text-white">Compartment Bay 2 Co-location Plan</h4>
-              </div>
-              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono border border-emerald-500/30">
-                Adjacent Berth Clustering: 100%
-              </span>
-            </div>
-
-            {/* Coach Layout Visualizer */}
-            <div className="grid grid-cols-2 gap-3 p-3 bg-slate-800/80 rounded-xl border border-slate-700 text-xs">
-              {/* Left Bay (Main Cabin) */}
-              <div className="p-2.5 bg-slate-900 rounded-lg border border-slate-700 space-y-2">
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block text-center">
-                  Main 6-Berth Bay
-                </span>
-                
-                {/* Lower Berth */}
-                <div className="p-2 rounded bg-emerald-900/60 border border-emerald-500 text-white flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-bold text-emerald-300 block">Berth 17 (Lower Berth)</span>
-                    <span className="font-semibold text-xs">
-                      {seniors[0] ? seniors[0].name : 'Ramesh Sundaram (M68)'}
-                    </span>
+                    <div className="p-2.5 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="font-mono font-bold text-xs text-slate-300 block">Berth 24 (Side Upper - SU)</span>
+                        <span className="text-[11px] text-slate-400">General Reservation</span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">SU</span>
+                    </div>
                   </div>
-                  <span className="px-1.5 py-0.5 rounded bg-emerald-700 text-[9px] font-bold">
-                    AUTO LB
-                  </span>
                 </div>
 
-                {/* Middle Berth */}
-                <div className="p-2 rounded bg-slate-800 border border-slate-600 text-slate-200 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-slate-400 block">Berth 18 (Middle Berth)</span>
-                    <span className="font-semibold text-xs">
-                      {seniors[1] ? seniors[1].name : 'Kalyani Sundaram (F64)'}
-                    </span>
-                  </div>
-                  <span className="text-[9px] text-slate-400 font-mono">CO-LOCATED</span>
+                <div className="pt-2 border-t border-slate-800 text-[11px] text-emerald-400 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Verified: Senior citizens are guaranteed Lower Berths without coach separation.</span>
                 </div>
-
-                {/* Upper Berth */}
-                <div className="p-2 rounded bg-slate-800 border border-slate-600 text-slate-200 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-slate-400 block">Berth 19 (Upper Berth)</span>
-                    <span className="font-semibold text-xs">
-                      {younger[0] ? younger[0].name : 'Arjun Sundaram (M34)'}
-                    </span>
-                  </div>
-                  <span className="text-[9px] text-slate-400 font-mono">UB</span>
-                </div>
-              </div>
-
-              {/* Right Bay (Side Berths) */}
-              <div className="p-2.5 bg-slate-900 rounded-lg border border-slate-700 space-y-2">
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block text-center">
-                  Side Berth Bay
-                </span>
-
-                {/* Side Lower */}
-                <div className="p-2 rounded bg-emerald-900/40 border border-emerald-600/60 text-white flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-bold text-emerald-300 block">Berth 23 (Side Lower)</span>
-                    <span className="font-semibold text-xs">
-                      {passengers[3] ? passengers[3].name : 'Ananya Sundaram (F7)'}
-                    </span>
-                  </div>
-                  <span className="px-1.5 py-0.5 rounded bg-emerald-800 text-[9px] font-bold">
-                    ADJACENT
-                  </span>
-                </div>
-
-                {/* Side Upper */}
-                <div className="p-2 rounded bg-slate-800/60 border border-slate-700 text-slate-400 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-slate-500 block">Berth 24 (Side Upper)</span>
-                    <span className="text-xs italic">Other Passenger</span>
-                  </div>
-                  <span className="text-[9px] text-slate-500 font-mono">VACANT</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Smart Benefit Callouts */}
-            <div className="space-y-1.5 text-xs text-slate-300 pt-1">
-              <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Zero climbing for Senior Citizens (Guaranteed Lower Berths)</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Entire family placed in same coach B2 within 2 feet of each other</span>
               </div>
             </div>
           </div>

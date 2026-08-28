@@ -1,27 +1,138 @@
 'use client';
 
 import React, { useState } from 'react';
-import { GitFork, CheckCircle2, XCircle, ArrowRight, ShieldCheck, Zap, Sparkles, Clock, AlertCircle } from 'lucide-react';
-import { MOCK_MULTI_LEG_ROUTES } from '@/lib/mockData';
-import { MultiLegRouteOption } from '@/lib/types';
+import { GitFork, CheckCircle2, XCircle, ArrowRight, ShieldCheck, Zap, Sparkles, Clock, AlertCircle, RefreshCw, Train } from 'lucide-react';
+import { STATIONS, TRAINS } from '@/lib/mockData';
 import { soundEffects } from '@/lib/audio';
+import { validateStationPair } from '@/lib/validation';
+import confetti from 'canvas-confetti';
 
 export const Subsystem3_MultiLegOptimizer: React.FC = () => {
-  const [selectedRoute, setSelectedRoute] = useState<MultiLegRouteOption>(MOCK_MULTI_LEG_ROUTES[0]);
-  const [isBooked, setIsBooked] = useState<boolean>(false);
+  const [sourceCode, setSourceCode] = useState<string>('SBC');
+  const [destCode, setDestCode] = useState<string>('MAS');
+  const [selectedClass, setSelectedClass] = useState<string>('3A');
+  const [travelDate, setTravelDate] = useState<string>(new Date(Date.now() + 86400000).toISOString().split('T')[0]);
 
-  const handleBookMultiLeg = () => {
-    setIsBooked(true);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [hasSearched, setHasSearched] = useState<boolean>(true);
+  const [selectedRouteIdx, setSelectedRouteIdx] = useState<number>(0);
+  const [bookedRoute, setBookedRoute] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const sourceName = STATIONS.find(s => s.code === sourceCode)?.name || sourceCode;
+  const destName = STATIONS.find(s => s.code === destCode)?.name || destCode;
+
+  // Dynamic route options generated from selection
+  const routeOptions = [
+    {
+      id: 'opt-1',
+      type: 'SPLIT_SEAT',
+      title: `Same Train Split-Seat Option (${sourceCode} ➔ ${destCode})`,
+      badge: 'Zero Transfer Risk (Same Train 12658)',
+      duration: '06h 15m',
+      totalFare: 1470,
+      savingVsTatkal: 450,
+      legs: [
+        {
+          trainNumber: '12658',
+          trainName: 'Chennai Mail Express',
+          from: `${sourceName} (${sourceCode})`,
+          to: 'Katpadi Jn (KPD)',
+          dep: '22:40',
+          arr: '02:35',
+          status: 'CNF (Confirmed)',
+          coachBerth: 'Coach B2, Berth 17 (Lower)',
+          class: selectedClass
+        },
+        {
+          trainNumber: '12658',
+          trainName: 'Chennai Mail Express (Same Rake)',
+          from: 'Katpadi Jn (KPD)',
+          to: `${destName} (${destCode})`,
+          dep: '02:40',
+          arr: '04:55',
+          status: 'CNF (Confirmed)',
+          coachBerth: 'Coach B3, Berth 24 (Lower)',
+          class: selectedClass
+        }
+      ]
+    },
+    {
+      id: 'opt-2',
+      type: 'JUNCTION_TRANSFER',
+      title: `Junction Transfer via Jolarpettai (${sourceCode} ➔ JTJ ➔ ${destCode})`,
+      badge: '45 Mins Safe Platform Transfer',
+      duration: '05h 40m',
+      totalFare: 1520,
+      savingVsTatkal: 400,
+      legs: [
+        {
+          trainNumber: '12028',
+          trainName: 'Shatabdi Express',
+          from: `${sourceName} (${sourceCode})`,
+          to: 'Jolarpettai Jn (JTJ)',
+          dep: '06:00',
+          arr: '08:15',
+          status: 'CNF (Confirmed)',
+          coachBerth: 'Coach C2, Seat 14',
+          class: selectedClass
+        },
+        {
+          trainNumber: '20608',
+          trainName: 'Vande Bharat Express',
+          from: 'Jolarpettai Jn (JTJ)',
+          to: `${destName} (${destCode})`,
+          dep: '09:00',
+          arr: '11:40',
+          status: 'CNF (Confirmed)',
+          coachBerth: 'Coach C1, Seat 22',
+          class: selectedClass
+        }
+      ]
+    }
+  ];
+
+  const handleSearchRoutes = () => {
+    setErrorMessage(null);
+    const stationCheck = validateStationPair(sourceCode, destCode);
+    if (!stationCheck.isValid) {
+      setErrorMessage(stationCheck.error || 'Invalid stations');
+      soundEffects.playAlert();
+      return;
+    }
+
+    setIsSearching(true);
+    soundEffects.playTick();
+
+    setTimeout(() => {
+      setIsSearching(false);
+      setHasSearched(true);
+      setBookedRoute(null);
+      soundEffects.playConfirmationChime();
+    }, 600);
+  };
+
+  const handleBookSelectedRoute = () => {
+    const route = routeOptions[selectedRouteIdx];
+    const generatedPnr = '821-' + Math.floor(1000000 + Math.random() * 9000000);
+    setBookedRoute({
+      pnr: generatedPnr,
+      route,
+      bookingTime: new Date().toLocaleTimeString('en-IN')
+    });
+    confetti({ particleCount: 90, spread: 75, origin: { y: 0.5 } });
     soundEffects.playConfirmationChime();
   };
 
+  const activeOption = routeOptions[selectedRouteIdx];
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      {/* Subsystem Header */}
-      <div className="bg-gradient-to-r from-[#0F2C59] to-[#1A407A] p-6 text-white">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-fadeIn">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#0B2545] to-[#133E6E] p-6 text-white">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-orange-500/20 border border-orange-400/30 flex items-center justify-center text-orange-400">
+            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
               <GitFork className="w-6 h-6" />
             </div>
             <div>
@@ -39,7 +150,7 @@ export const Subsystem3_MultiLegOptimizer: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1.5 rounded-xl border border-emerald-400/30 text-emerald-300 text-xs">
+          <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1.5 rounded-xl border border-emerald-400/30 text-emerald-300 text-xs font-bold">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>100% Confirmed Berth Guarantee</span>
           </div>
@@ -47,177 +158,197 @@ export const Subsystem3_MultiLegOptimizer: React.FC = () => {
       </div>
 
       <div className="p-6 space-y-6">
-        {/* Route Selector Tabs */}
-        <div className="flex flex-wrap gap-3">
-          {MOCK_MULTI_LEG_ROUTES.map((route) => (
-            <button
-              key={route.id}
-              onClick={() => {
-                setSelectedRoute(route);
-                setIsBooked(false);
-              }}
-              className={`p-3.5 rounded-xl text-left border transition-all ${
-                selectedRoute.id === route.id
-                  ? 'bg-orange-50/80 border-orange-500 ring-2 ring-orange-500/20'
-                  : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                  route.type === 'SPLIT_SEAT' ? 'bg-blue-600 text-white' : 'bg-purple-600 text-white'
-                }`}>
-                  {route.type === 'SPLIT_SEAT' ? 'Option A: Same Train Split' : 'Option B: Junction Transfer'}
-                </span>
-                <span className="text-xs font-bold text-slate-900">{route.overallSource} ➔ {route.overallDestination}</span>
-              </div>
-              <p className="text-[11px] text-slate-500">
-                {route.type === 'SPLIT_SEAT'
-                  ? 'Zero train change • Change berth at Katpadi Jn • 100% CNF'
-                  : 'Howrah Rajdhani + Vande Bharat via Kanpur • 100% CNF'}
-              </p>
-            </button>
-          ))}
-        </div>
-
-        {/* Side-by-Side Comparison: Direct WL vs RailFlow Multi-Leg Route */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Legacy Direct Booking (Stuck in Waitlist) */}
-          <div className="md:col-span-5 p-5 bg-rose-50/70 rounded-2xl border border-rose-200/80 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-rose-900 flex items-center gap-1.5">
-                <XCircle className="w-4 h-4 text-rose-600" />
-                Legacy IRCTC Direct Ticket
-              </span>
-              <span className="px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-bold">
-                HIGH RISK WL
-              </span>
+        {/* Search Parameters Form */}
+        <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">From Station</label>
+              <select
+                value={sourceCode}
+                onChange={(e) => {
+                  setSourceCode(e.target.value);
+                  setErrorMessage(null);
+                }}
+                className="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+              >
+                {STATIONS.map(s => (
+                  <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+                ))}
+              </select>
             </div>
 
-            <div className="p-4 bg-white rounded-xl border border-rose-200 space-y-2">
-              <div className="text-xs font-bold text-slate-800">
-                Direct Single Ticket ({selectedRoute.overallSource} to {selectedRoute.overallDestination})
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-rose-600 font-mono">
-                  {selectedRoute.type === 'SPLIT_SEAT' ? 'GNWL 34' : 'GNWL 55'}
-                </span>
-                <span className="text-xs text-rose-700 font-medium">
-                  {selectedRoute.type === 'SPLIT_SEAT' ? '(42% Confirmation Odds)' : '(30% Confirmation Odds)'}
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500">
-                Cannot board if chart prepares with WL. Heavy risk of last-minute ticket cancellation.
-              </p>
+            <div>
+              <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">To Destination</label>
+              <select
+                value={destCode}
+                onChange={(e) => {
+                  setDestCode(e.target.value);
+                  setErrorMessage(null);
+                }}
+                className="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+              >
+                {STATIONS.map(s => (
+                  <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+                ))}
+              </select>
             </div>
 
-            <div className="space-y-1.5 text-xs text-slate-600">
-              <div className="flex justify-between">
-                <span>Tatkal Premium (If Available):</span>
-                <span className="font-mono text-rose-600">+₹{selectedRoute.savingsVsTatkal || 450}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Confirmation Guarantee:</span>
-                <span className="font-bold text-rose-600">NO (WL Drop Risk)</span>
-              </div>
+            <div>
+              <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">Class</label>
+              <select
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
+                className="w-full p-2.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+              >
+                <option value="3A">3A (3-Tier AC)</option>
+                <option value="2A">2A (2-Tier AC)</option>
+                <option value="1A">1A (First AC)</option>
+                <option value="SL">SL (Sleeper)</option>
+                <option value="CC">CC (Chair Car)</option>
+              </select>
+            </div>
+
+            <div className="flex items-end">
+              <button
+                onClick={handleSearchRoutes}
+                disabled={isSearching}
+                className="w-full p-2.5 bg-[#0B2545] hover:bg-[#133E6E] text-white rounded-lg font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                {isSearching ? (
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+                )}
+                <span>Scan Graph Paths</span>
+              </button>
             </div>
           </div>
 
-          {/* RailFlow AI Multi-Leg Optimizer (100% Confirmed) */}
-          <div className="md:col-span-7 p-5 bg-emerald-50/80 rounded-2xl border border-emerald-300 space-y-4 shadow-sm">
+          {errorMessage && (
+            <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 font-semibold flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+        </div>
+
+        {bookedRoute ? (
+          /* Booked Confirmation View */
+          <div className="p-5 bg-emerald-500 text-white rounded-2xl shadow-md space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-950 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                RailFlow Smart Multi-Leg Route
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
-                <Zap className="w-3 h-3 text-yellow-300" />
-                100% Confirmed CNF
-              </span>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-8 h-8" />
+                <div>
+                  <h3 className="text-base font-black">Connecting Journey Confirmed! PNR: {bookedRoute.pnr}</h3>
+                  <p className="text-xs text-emerald-100">{bookedRoute.route.title}</p>
+                </div>
+              </div>
+              <div className="text-right font-mono">
+                <span className="text-[10px] text-emerald-200 block uppercase">Total Fare</span>
+                <span className="text-lg font-black">₹{bookedRoute.route.totalFare}</span>
+              </div>
             </div>
 
-            {/* Legs detail */}
-            <div className="space-y-2.5">
-              {selectedRoute.legs.map((leg, index) => (
-                <div key={index} className="p-3.5 bg-white rounded-xl border border-emerald-200 shadow-xs space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-emerald-700 text-white text-xs font-bold flex items-center justify-center">
-                        {index + 1}
-                      </span>
-                      <span className="font-bold text-xs text-slate-900">{leg.trainName} ({leg.trainNumber})</span>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                      {leg.seatStatus}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 text-xs pt-1 border-t border-slate-100">
-                    <div>
-                      <span className="text-[10px] text-slate-400 block">From</span>
-                      <span className="font-bold text-slate-800">{leg.fromStation}</span>
-                      <span className="text-[11px] text-slate-500 block font-mono">{leg.departureTime}</span>
-                    </div>
-                    <div className="text-center">
-                      <span className="text-[10px] text-slate-400 block">Allocated Berth</span>
-                      <span className="font-bold text-emerald-700 text-xs block">{leg.allocatedCoachBerth}</span>
-                      <span className="text-[10px] text-slate-400">Class {leg.classType}</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-slate-400 block">To</span>
-                      <span className="font-bold text-slate-800">{leg.toStation}</span>
-                      <span className="text-[11px] text-slate-500 block font-mono">{leg.arrivalTime}</span>
-                    </div>
-                  </div>
+            <div className="p-4 bg-white/10 rounded-xl space-y-2 text-xs">
+              <div className="font-bold text-emerald-200 uppercase text-[11px]">Seat Continuity Voucher:</div>
+              {bookedRoute.route.legs.map((leg: any, idx: number) => (
+                <div key={idx} className="flex justify-between border-b border-white/10 pb-1">
+                  <span>Leg {idx + 1}: {leg.from} ➔ {leg.to} ({leg.trainNumber})</span>
+                  <span className="font-mono font-bold text-white">{leg.coachBerth}</span>
                 </div>
               ))}
             </div>
 
-            {/* Layover / Advantages */}
-            {selectedRoute.layoverStation && (
-              <div className="p-2.5 bg-purple-50 text-purple-900 rounded-xl border border-purple-200 text-xs flex items-center gap-2">
-                <Clock className="w-4 h-4 text-purple-600 shrink-0" />
-                <span><strong>Station Layover:</strong> {selectedRoute.layoverDuration}</span>
-              </div>
-            )}
-
-            <div className="p-3 bg-white/80 rounded-xl border border-emerald-200 space-y-1.5">
-              <span className="text-[11px] font-bold text-emerald-950 uppercase tracking-wider block">
-                Why this route wins:
-              </span>
-              <ul className="space-y-1 text-xs text-slate-700">
-                {selectedRoute.advantages.map((adv, i) => (
-                  <li key={i} className="flex items-start gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>{adv}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Action */}
-            <div className="pt-2 flex items-center justify-between border-t border-emerald-200">
-              <div>
-                <span className="text-[10px] text-slate-500 block">Total Combined Fare:</span>
-                <span className="text-lg font-black font-mono text-emerald-700">₹{selectedRoute.totalFare}</span>
-              </div>
-
-              {!isBooked ? (
-                <button
-                  onClick={handleBookMultiLeg}
-                  className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-2"
-                >
-                  <span>1-Click Multi-Leg Instant Book</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <div className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 animate-fadeIn">
-                  <CheckCircle2 className="w-4 h-4 text-white" />
-                  <span>2 Linked Tickets Confirmed!</span>
-                </div>
-              )}
-            </div>
+            <button
+              onClick={() => setBookedRoute(null)}
+              className="px-4 py-2 bg-white text-emerald-950 rounded-xl text-xs font-bold transition-all cursor-pointer"
+            >
+              Search Alternate Routes
+            </button>
           </div>
-        </div>
+        ) : (
+          hasSearched && (
+            <div className="space-y-4 animate-fadeIn">
+              {/* Route Options Switcher */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {routeOptions.map((opt, idx) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => {
+                      setSelectedRouteIdx(idx);
+                      soundEffects.playTick();
+                    }}
+                    className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
+                      selectedRouteIdx === idx
+                        ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/20 shadow-xs'
+                        : 'bg-white border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-black uppercase">
+                        {opt.type === 'SPLIT_SEAT' ? 'Option A: Same Train Split' : 'Option B: Junction Transfer'}
+                      </span>
+                      <span className="text-xs font-bold text-emerald-800 font-mono">₹{opt.totalFare}</span>
+                    </div>
+                    <div className="text-xs font-bold text-slate-900">{opt.title}</div>
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Duration: {opt.duration} • Saves ₹{opt.savingVsTatkal} vs Tatkal Premium
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Selected Route Detailed Path */}
+              <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-800 uppercase flex items-center gap-1.5">
+                    <Train className="w-4 h-4 text-orange-500" />
+                    Detailed Leg Breakdown & Berth Assignments:
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase">
+                    100% CNF Guaranteed
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {activeOption.legs.map((leg, idx) => (
+                    <div key={idx} className="p-4 bg-white border border-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-[#0B2545] text-white text-[10px] font-bold flex items-center justify-center">
+                            {idx + 1}
+                          </span>
+                          <span className="font-black text-xs text-slate-900">{leg.trainName} (#{leg.trainNumber})</span>
+                        </div>
+                        <div className="text-xs text-slate-600 mt-1">
+                          {leg.from} ({leg.dep}) ➔ {leg.to} ({leg.arr})
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] text-slate-400 block uppercase font-semibold">Berth Allocation</span>
+                        <span className="font-mono font-black text-xs text-emerald-700 block">
+                          {leg.coachBerth}
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-mono">{leg.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    onClick={handleBookSelectedRoute}
+                    className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl font-bold text-xs shadow-md flex items-center gap-2 transition-all cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Book Confirmed Connecting Journey (₹{activeOption.totalFare})</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+        )}
       </div>
     </div>
   );
