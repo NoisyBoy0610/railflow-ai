@@ -13,8 +13,43 @@ export const INDIC_LANGUAGES: { code: IndicLanguage; name: string; nativeName: s
   { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ', speechLocale: 'or-IN' },
 ];
 
-export function speakMessage(text: string, lang: IndicLanguage = 'en') {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+let activeAudioElement: HTMLAudioElement | null = null;
+
+export async function speakMessage(text: string, lang: IndicLanguage = 'en') {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  // Stop any currently playing speech audio
+  if (activeAudioElement) {
+    activeAudioElement.pause();
+    activeAudioElement.currentTime = 0;
+    activeAudioElement = null;
+  }
+
+  // Step 1: Attempt Server-side Neural Studio Human Voice Generation (OpenAI Nova / Shimmer)
+  try {
+    const response = await fetch('/api/ai/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, lang })
+    });
+
+    if (response.ok && response.headers.get('Content-Type')?.includes('audio')) {
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      activeAudioElement = audio;
+      audio.playbackRate = 1.0;
+      await audio.play();
+      return;
+    }
+  } catch (err) {
+    console.debug('Neural TTS fallback to enhanced browser synthesis:', err);
+  }
+
+  // Step 2: High-Quality Natural Human Voice Browser Synthesizer
+  if (!('speechSynthesis' in window)) {
     return;
   }
 
@@ -23,14 +58,27 @@ export function speakMessage(text: string, lang: IndicLanguage = 'en') {
     const utterance = new SpeechSynthesisUtterance(text);
     const langObj = INDIC_LANGUAGES.find(l => l.code === lang) || INDIC_LANGUAGES[0];
     utterance.lang = langObj.speechLocale;
-    utterance.rate = 0.95;
-    utterance.pitch = 1.0;
-    
-    // Pick appropriate voice if available
+
+    // Natural human conversational pacing
+    utterance.rate = 0.92;
+    utterance.pitch = 1.04;
+    utterance.volume = 1.0;
+
     const voices = window.speechSynthesis.getVoices();
-    const matchingVoice = voices.find(v => v.lang.startsWith(langObj.speechLocale.split('-')[0]));
-    if (matchingVoice) {
-      utterance.voice = matchingVoice;
+
+    // Priority filter for natural, human-sounding neural voices
+    const preferredVoice = voices.find(v => {
+      const name = v.name.toLowerCase();
+      const isTargetLang = v.lang.startsWith(langObj.speechLocale.split('-')[0]) || v.lang === langObj.speechLocale;
+      const isNatural = name.includes('natural') || name.includes('neural') || name.includes('google') || 
+                        name.includes('veena') || name.includes('lekha') || name.includes('rishi') || 
+                        name.includes('neerja') || name.includes('swara') || name.includes('siri') || 
+                        name.includes('samantha') || name.includes('premium') || name.includes('enhanced');
+      return isTargetLang && isNatural;
+    }) || voices.find(v => v.lang.startsWith(langObj.speechLocale.split('-')[0])) || voices.find(v => v.name.toLowerCase().includes('google'));
+
+    if (preferredVoice) {
+      utterance.voice = preferredVoice;
     }
 
     window.speechSynthesis.speak(utterance);
