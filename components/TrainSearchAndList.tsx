@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { Search, Train as TrainIcon, ArrowRightLeft, Calendar, UserCheck, ShieldCheck, Zap, ArrowRight, CheckCircle2, Clock, Sparkles, Filter, AlertCircle } from 'lucide-react';
 import { STATIONS, TRAINS } from '@/lib/mockData';
-import { Train, TravelClass, QuotaType } from '@/lib/types';
+import { Train, TravelClass, QuotaType, IndicLanguage } from '@/lib/types';
 import { soundEffects } from '@/lib/audio';
 import { validateStationPair, validateTravelDate } from '@/lib/validation';
+import { TRANSLATIONS } from '@/lib/translations';
 
 interface TrainSearchProps {
   initialSource?: string;
   initialDest?: string;
   initialClass?: TravelClass;
   initialQuota?: QuotaType;
+  currentLang?: IndicLanguage;
   onSelectBookTrain?: (train: Train, travelClass: TravelClass) => void;
 }
 
@@ -20,6 +22,7 @@ export const TrainSearchAndList: React.FC<TrainSearchProps> = ({
   initialDest = 'MAS',
   initialClass = '3A',
   initialQuota = 'GN',
+  currentLang = 'en',
   onSelectBookTrain,
 }) => {
   const [sourceCode, setSourceCode] = useState<string>(initialSource);
@@ -28,6 +31,8 @@ export const TrainSearchAndList: React.FC<TrainSearchProps> = ({
   const [selectedClass, setSelectedClass] = useState<TravelClass>(initialClass);
   const [selectedQuota, setSelectedQuota] = useState<QuotaType>(initialQuota);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
 
   const handleSwapStations = () => {
     soundEffects.playTick();
@@ -62,7 +67,7 @@ export const TrainSearchAndList: React.FC<TrainSearchProps> = ({
           {/* Origin Station */}
           <div className="md:col-span-3">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-              From Station
+              {t.fromStation}
             </label>
             <select
               value={sourceCode}
@@ -90,7 +95,7 @@ export const TrainSearchAndList: React.FC<TrainSearchProps> = ({
           {/* Destination Station */}
           <div className="md:col-span-3">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-              To Destination
+              {t.toStation}
             </label>
             <select
               value={destCode}
@@ -108,7 +113,7 @@ export const TrainSearchAndList: React.FC<TrainSearchProps> = ({
           {/* Date Picker */}
           <div className="md:col-span-2">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-              Journey Date
+              {t.travelDate}
             </label>
             <input
               type="date"
@@ -121,7 +126,7 @@ export const TrainSearchAndList: React.FC<TrainSearchProps> = ({
           {/* Quota */}
           <div className="md:col-span-3">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-              Reservation Quota
+              {t.quota}
             </label>
             <select
               value={selectedQuota}

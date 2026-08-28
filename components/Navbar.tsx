@@ -5,6 +5,7 @@ import { ShieldCheck, Wifi, Clock, Train, Globe, Fingerprint, UserCheck, LogIn, 
 import { INDIC_LANGUAGES, soundEffects } from '@/lib/audio';
 import { IndicLanguage } from '@/lib/types';
 import { aiEngine } from '@/lib/aiEngine';
+import { TRANSLATIONS } from '@/lib/translations';
 import { UserProfile } from './AuthModal';
 
 interface NavbarProps {
@@ -32,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [time, setTime] = useState<string>('');
   const [hasApiKey, setHasApiKey] = useState<boolean>(false);
+  const t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
 
   useEffect(() => {
     const updateTime = () => {
@@ -51,11 +53,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center gap-2 text-slate-300">
           <div className="flex items-center gap-1.5 text-orange-400 font-semibold text-[11px]">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Indian Railways National PRS Gateway: OPERATIONAL</span>
+            <span>{t.prsStatus}</span>
           </div>
           <span className="hidden md:inline-block text-slate-600">|</span>
           <span className="hidden md:inline-flex items-center gap-1 text-slate-300 text-[11px]">
-            CRiS Certified • IRCTC Connected
+            {t.crisConnected}
           </span>
         </div>
 
@@ -113,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'overview' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            Book Trains
+            {t.bookTrains}
           </button>
           <button
             onClick={() => onSelectTab('pnr_tracker')}
@@ -121,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'pnr_tracker' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            PNR Status
+            {t.pnrStatus}
           </button>
           <button
             onClick={() => onSelectTab('ticket_wallet')}
@@ -129,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'ticket_wallet' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            E-Ticket Wallet
+            {t.ticketWallet}
           </button>
           <button
             onClick={() => onSelectTab('seat_map')}
@@ -137,7 +139,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'seat_map' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            Coach Seat Map
+            {t.coachSeatMap}
           </button>
           <button
             onClick={() => onSelectTab('live_radar')}
@@ -145,7 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'live_radar' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            Live Train GPS
+            {t.liveTrainGps}
           </button>
           <button
             onClick={() => onSelectTab('station_board')}
@@ -153,7 +155,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'station_board' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            Station Board
+            {t.stationBoard}
           </button>
           <button
             onClick={() => onSelectTab('subsystem10')}
@@ -161,7 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'subsystem10' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            RailMadad
+            {t.railMadad}
           </button>
           <button
             onClick={() => onSelectTab('subsystem1')}
@@ -169,7 +171,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'subsystem1' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
             }`}
           >
-            TDR & Refunds
+            {t.tdrRefunds}
           </button>
         </nav>
 

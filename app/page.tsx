@@ -25,6 +25,7 @@ import { LiveTrainRouteMap } from '@/components/LiveTrainRouteMap';
 import { DigitalTicketWallet } from '@/components/DigitalTicketWallet';
 import { IndicLanguage, TravelClass, QuotaType } from '@/lib/types';
 import { soundEffects } from '@/lib/audio';
+import { TRANSLATIONS } from '@/lib/translations';
 import { 
   Sparkles, Train as TrainIcon, Mic, GitFork, Zap, HelpCircle, Users, 
   Timer, Scale, AlertCircle, Accessibility, Camera, Search, Radio, Compass, ShieldCheck, Smartphone, Fingerprint, Award, Tv, Bed, QrCode
@@ -38,6 +39,9 @@ export default function Home() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // Translation instance
+  const t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+
   // Train Search pre-fills from voice
   const [searchSource, setSearchSource] = useState<string>('SBC');
   const [searchDest, setSearchDest] = useState<string>('MAS');
@@ -45,24 +49,24 @@ export default function Home() {
   const [searchQuota, setSearchQuota] = useState<QuotaType>('GN');
 
   const navigationServices = [
-    { id: 'golden_flow', title: 'Unified Booking Lifecycle', short: 'Booking Flow', icon: Award },
-    { id: 'ticket_wallet', title: 'Electronic Reservation Slip (ERS) & Digital Wallet', short: 'E-Ticket', icon: QrCode },
-    { id: 'seat_map', title: 'Visual Coach Blueprint & Berth Selector', short: 'Seat Map', icon: Bed },
-    { id: 'track_radar', title: 'Geo-Spatial Track Radar & Route Milestones', short: 'Track Radar', icon: Compass },
-    { id: 'overview', title: 'Train Search & Seat Availability', short: 'Search', icon: Search },
-    { id: 'station_board', title: 'Live Station Platform Display Board', short: 'Station Board', icon: Tv },
-    { id: 'subsystem7', title: 'Tatkal Fast-Track Portal (10 AM / 11 AM)', short: 'Tatkal Express', icon: Timer },
-    { id: 'subsystem2', title: 'AskDISHA 2.0 AI Voice Booking', short: 'Voice AI', icon: Mic },
-    { id: 'subsystem3', title: 'Connecting Route & Split-Seat Finder', short: 'Split Seat', icon: GitFork },
-    { id: 'subsystem4', title: 'Instant Express Checkout', short: 'Fast Checkout', icon: Zap },
-    { id: 'subsystem5', title: 'Waitlist & RAC Confirmation Predictor', short: 'WL Predictor', icon: HelpCircle },
-    { id: 'subsystem6', title: 'Senior Citizen & Family Lower Berth Allocator', short: 'Senior SS', icon: Users },
-    { id: 'subsystem1', title: 'TDR & Gazette Auto-Refund Claims', short: 'TDR Refunds', icon: Scale },
-    { id: 'subsystem8', title: 'Live Disruption & Delay Copilot', short: 'Delay Radar', icon: AlertCircle },
-    { id: 'subsystem9', title: 'Station Concierge & Buggy Services', short: 'Porter & Buggy', icon: Accessibility },
-    { id: 'subsystem10', title: 'RailMadad Grievance Redressal (Vision AI)', short: 'RailMadad', icon: Camera },
-    { id: 'pnr_tracker', title: 'Live PNR Status & Coach Position', short: 'PNR Radar', icon: Compass },
-    { id: 'live_radar', title: 'GPS Live Train Running Status', short: 'Live GPS', icon: Radio },
+    { id: 'golden_flow', title: t.portalTitle.split('—')[0] + 'Journey Flow', short: 'Booking Flow', icon: Award },
+    { id: 'ticket_wallet', title: t.ticketWallet, short: 'E-Ticket', icon: QrCode },
+    { id: 'seat_map', title: t.coachSeatMap, short: 'Seat Map', icon: Bed },
+    { id: 'track_radar', title: t.liveDelayRadar, short: 'Track Radar', icon: Compass },
+    { id: 'overview', title: t.searchTrains, short: 'Search', icon: Search },
+    { id: 'station_board', title: t.stationBoard, short: 'Station Board', icon: Tv },
+    { id: 'subsystem7', title: t.tatkalPortal, short: 'Tatkal', icon: Timer },
+    { id: 'subsystem2', title: t.voiceBooking, short: 'Voice AI', icon: Mic },
+    { id: 'subsystem3', title: t.connectingRoutes, short: 'Split Seat', icon: GitFork },
+    { id: 'subsystem4', title: t.fastCheckout, short: 'Fast Pay', icon: Zap },
+    { id: 'subsystem5', title: t.waitlistPredictor, short: 'WL Predictor', icon: HelpCircle },
+    { id: 'subsystem6', title: t.seniorBerth, short: 'Senior SS', icon: Users },
+    { id: 'subsystem1', title: t.tdrRefunds, short: 'TDR Refunds', icon: Scale },
+    { id: 'subsystem8', title: t.liveDelayRadar, short: 'Delay Radar', icon: AlertCircle },
+    { id: 'subsystem9', title: t.stationConcierge, short: 'Porter', icon: Accessibility },
+    { id: 'subsystem10', title: t.railMadad, short: 'RailMadad', icon: Camera },
+    { id: 'pnr_tracker', title: t.pnrStatus, short: 'PNR Radar', icon: Compass },
+    { id: 'live_radar', title: t.liveTrainGps, short: 'Live GPS', icon: Radio },
   ];
 
   const handleTabChange = (tabId: string) => {
@@ -103,15 +107,15 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px] sm:text-xs border border-emerald-500/30 flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  Indian Railways Official Digital Platform
+                  {t.crisConnected}
                 </span>
-                <span className="text-[10px] sm:text-xs text-slate-300 font-mono hidden sm:inline">CRiS PRS Connected</span>
+                <span className="text-[10px] sm:text-xs text-slate-300 font-mono hidden sm:inline">{t.prsStatus}</span>
               </div>
               <h1 className="text-xl sm:text-3xl font-black tracking-tight text-white leading-tight">
-                RailFlow — Next-Gen Railway Passenger Operating System
+                {t.portalTitle}
               </h1>
               <p className="text-[11px] sm:text-xs text-slate-300 max-w-3xl leading-relaxed">
-                Empowering millions of Indian Railways passengers with AskDISHA 2.0 voice bookings, guaranteed split-seat routing, instant Tatkal checkouts, live GPS train tracking, and automated Gazette TDR refunds.
+                {t.portalSubtitle}
               </p>
             </div>
 
@@ -170,6 +174,7 @@ export default function Home() {
             initialDest={searchDest}
             initialClass={searchClass}
             initialQuota={searchQuota}
+            currentLang={currentLang}
             onSelectBookTrain={() => {
               setActiveTab('subsystem4');
               soundEffects.playConfirmationChime();
