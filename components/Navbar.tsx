@@ -124,6 +124,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             PNR Status
           </button>
           <button
+            onClick={() => onSelectTab('ticket_wallet')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'ticket_wallet' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            E-Ticket Wallet
+          </button>
+          <button
+            onClick={() => onSelectTab('seat_map')}
+            className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+              activeTab === 'seat_map' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            Coach Seat Map
+          </button>
+          <button
             onClick={() => onSelectTab('live_radar')}
             className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
               activeTab === 'live_radar' ? 'bg-white/15 text-white' : 'hover:bg-white/5 hover:text-white'

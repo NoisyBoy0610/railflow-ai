@@ -20,11 +20,14 @@ import { TrainSearchAndList } from '@/components/TrainSearchAndList';
 import { PNRTracker } from '@/components/PNRTracker';
 import { LiveTrainRadar } from '@/components/LiveTrainRadar';
 import { LiveStationBoard } from '@/components/LiveStationBoard';
+import { CoachSeatMapSelector } from '@/components/CoachSeatMapSelector';
+import { LiveTrainRouteMap } from '@/components/LiveTrainRouteMap';
+import { DigitalTicketWallet } from '@/components/DigitalTicketWallet';
 import { IndicLanguage, TravelClass, QuotaType } from '@/lib/types';
 import { soundEffects } from '@/lib/audio';
 import { 
   Sparkles, Train as TrainIcon, Mic, GitFork, Zap, HelpCircle, Users, 
-  Timer, Scale, AlertCircle, Accessibility, Camera, Search, Radio, Compass, ShieldCheck, Smartphone, Fingerprint, Award, Tv
+  Timer, Scale, AlertCircle, Accessibility, Camera, Search, Radio, Compass, ShieldCheck, Smartphone, Fingerprint, Award, Tv, Bed, QrCode
 } from 'lucide-react';
 
 export default function Home() {
@@ -43,20 +46,23 @@ export default function Home() {
 
   const navigationServices = [
     { id: 'golden_flow', title: 'Unified Booking Lifecycle', short: 'Booking Flow', icon: Award },
+    { id: 'ticket_wallet', title: 'Electronic Reservation Slip (ERS) & Digital Wallet', short: 'E-Ticket', icon: QrCode },
+    { id: 'seat_map', title: 'Visual Coach Blueprint & Berth Selector', short: 'Seat Map', icon: Bed },
+    { id: 'track_radar', title: 'Geo-Spatial Track Radar & Route Milestones', short: 'Track Radar', icon: Compass },
     { id: 'overview', title: 'Train Search & Seat Availability', short: 'Search', icon: Search },
+    { id: 'station_board', title: 'Live Station Platform Display Board', short: 'Station Board', icon: Tv },
+    { id: 'subsystem7', title: 'Tatkal Fast-Track Portal (10 AM / 11 AM)', short: 'Tatkal Express', icon: Timer },
     { id: 'subsystem2', title: 'AskDISHA 2.0 AI Voice Booking', short: 'Voice AI', icon: Mic },
     { id: 'subsystem3', title: 'Connecting Route & Split-Seat Finder', short: 'Split Seat', icon: GitFork },
     { id: 'subsystem4', title: 'Instant Express Checkout', short: 'Fast Checkout', icon: Zap },
     { id: 'subsystem5', title: 'Waitlist & RAC Confirmation Predictor', short: 'WL Predictor', icon: HelpCircle },
     { id: 'subsystem6', title: 'Senior Citizen & Family Lower Berth Allocator', short: 'Senior SS', icon: Users },
-    { id: 'subsystem7', title: 'Tatkal Fast-Track Portal (10 AM / 11 AM)', short: 'Tatkal Express', icon: Timer },
     { id: 'subsystem1', title: 'TDR & Gazette Auto-Refund Claims', short: 'TDR Refunds', icon: Scale },
     { id: 'subsystem8', title: 'Live Disruption & Delay Copilot', short: 'Delay Radar', icon: AlertCircle },
     { id: 'subsystem9', title: 'Station Concierge & Buggy Services', short: 'Porter & Buggy', icon: Accessibility },
     { id: 'subsystem10', title: 'RailMadad Grievance Redressal (Vision AI)', short: 'RailMadad', icon: Camera },
     { id: 'pnr_tracker', title: 'Live PNR Status & Coach Position', short: 'PNR Radar', icon: Compass },
     { id: 'live_radar', title: 'GPS Live Train Running Status', short: 'Live GPS', icon: Radio },
-    { id: 'station_board', title: 'Live Station Arrival & Departure Platform Board', short: 'Station Board', icon: Tv },
   ];
 
   const handleTabChange = (tabId: string) => {
@@ -197,6 +203,9 @@ export default function Home() {
         {activeTab === 'pnr_tracker' && <PNRTracker />}
         {activeTab === 'live_radar' && <LiveTrainRadar />}
         {activeTab === 'station_board' && <LiveStationBoard />}
+        {activeTab === 'seat_map' && <CoachSeatMapSelector />}
+        {activeTab === 'track_radar' && <LiveTrainRouteMap />}
+        {activeTab === 'ticket_wallet' && <DigitalTicketWallet />}
       </main>
 
       {/* Mobile Bottom Bar */}

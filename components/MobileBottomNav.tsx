@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Mic, GitFork, Timer, Menu, X, Scale, Users, AlertCircle, Accessibility, Camera, Compass, Radio, Sparkles, Award } from 'lucide-react';
+import { Search, Mic, GitFork, Timer, Menu, X, Scale, Users, AlertCircle, Accessibility, Camera, Compass, Radio, Sparkles, Award, QrCode, Bed } from 'lucide-react';
 import { soundEffects } from '@/lib/audio';
 
 interface MobileBottomNavProps {
@@ -26,11 +26,15 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ activeTab, onS
 
   const allServices = [
     { id: 'golden_flow', title: 'Unified Booking Lifecycle', desc: 'Step-by-Step Ticket Journey', icon: Award, badge: 'Unified' },
+    { id: 'ticket_wallet', title: 'Electronic Reservation Slip (ERS)', desc: 'Official QR Code E-Ticket', icon: QrCode, badge: 'E-Ticket' },
+    { id: 'seat_map', title: 'Visual Coach Blueprint & Seat Map', desc: 'LHB Berth Selection Grid', icon: Bed, badge: 'Seat Map' },
+    { id: 'track_radar', title: 'Live Geo-Spatial Track Radar', desc: 'Locomotive Milestones & Speed', icon: Compass, badge: 'Track GPS' },
     { id: 'subsystem1', title: 'TDR & Gazette Auto-Refund Claims', desc: 'Rule 14.1-14.22 Dispute Adjudication', icon: Scale, badge: 'Refunds' },
     { id: 'subsystem3', title: 'Connecting Route & Split-Seat Finder', desc: 'Guaranteed 100% CNF Routing', icon: GitFork, badge: 'Routing' },
     { id: 'subsystem4', title: 'Instant Express Checkout', desc: 'Zero Dark-Patterns & 1-Click Pay', icon: Sparkles, badge: 'Fast Pay' },
     { id: 'subsystem5', title: 'Waitlist & RAC Predictor', desc: 'GNWL, RLWL & RAC Clearance Odds', icon: Compass, badge: 'Predictor' },
     { id: 'subsystem6', title: 'Senior SS Lower Berth Allocator', desc: 'Lower Berth Co-Location Engine', icon: Users, badge: 'Senior SS' },
+    { id: 'subsystem7', title: 'Tatkal Fast-Track Portal', desc: '10 AM / 11 AM Rapid Booking', icon: Timer, badge: 'Tatkal' },
     { id: 'subsystem8', title: 'Live Disruption & Delay Copilot', desc: '>3hr Delay Radar & Free Reschedule', icon: AlertCircle, badge: 'Copilot' },
     { id: 'subsystem9', title: 'Station Concierge & Buggy Services', desc: 'Standardized Coolie Tariff & Wheelchair', icon: Accessibility, badge: 'Station' },
     { id: 'subsystem10', title: 'RailMadad Grievance Redressal', desc: 'Vision AI Photo Complaint Triage', icon: Camera, badge: 'Grievance' },
